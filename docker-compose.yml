@@ -1,11 +1,12 @@
 services:
   app:
+    container_name: therecipe-app
     image: ghcr.io/mschoettli/therecipe:latest
     restart: unless-stopped
     env_file:
       - .env
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"
     volumes:
       - recipe_uploads:/app/uploads
     labels:
@@ -20,6 +21,7 @@ services:
         condition: service_healthy
 
   postgres:
+    container_name: therecipe-postgres
     image: postgres:16-alpine
     restart: unless-stopped
     env_file:
@@ -33,6 +35,7 @@ services:
       retries: 10
 
   watchtower:
+    container_name: therecipe-watchtower
     image: containrrr/watchtower:1.7.1
     restart: unless-stopped
     volumes:

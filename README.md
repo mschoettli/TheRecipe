@@ -20,6 +20,13 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
 Open `http://localhost:8000`.
 
+Set `APP_PORT` in `.env` to change the host port, for example:
+
+```env
+APP_PORT=8010
+APP_BASE_URL=http://localhost:8010
+```
+
 ## OMV Auto Updates
 
 The Compose file includes Watchtower. Watchtower checks every five minutes for a
