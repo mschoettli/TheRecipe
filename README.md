@@ -27,6 +27,13 @@ APP_PORT=8010
 APP_BASE_URL=http://localhost:8010
 ```
 
+Set fixed storage paths for OMV with:
+
+```env
+POSTGRES_DATA_PATH=/home/mschoettli/docker/therecipe/data
+UPLOADS_PATH=/home/mschoettli/docker/therecipe/uploads
+```
+
 ## OMV Auto Updates
 
 The Compose file includes Watchtower. Watchtower checks every five minutes for a

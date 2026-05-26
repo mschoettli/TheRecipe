@@ -3,12 +3,17 @@ services:
     container_name: therecipe-app
     image: ghcr.io/mschoettli/therecipe:latest
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://therecipe:change-me@postgres:5432/therecipe}
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-change-me-to-a-long-random-value}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8000}
+      AI_PROVIDER: ${AI_PROVIDER:-disabled}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
     ports:
       - "${APP_PORT:-8000}:8000"
     volumes:
-      - recipe_uploads:/app/uploads
+      - ${UPLOADS_PATH:-./uploads}:/app/uploads
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
@@ -24,10 +29,12 @@ services:
     container_name: therecipe-postgres
     image: postgres:16-alpine
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-therecipe}
+      POSTGRES_USER: ${POSTGRES_USER:-therecipe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ${POSTGRES_DATA_PATH:-./data/postgres}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
@@ -45,7 +52,3 @@ services:
       - "--cleanup"
       - "--interval"
       - "300"
-
-volumes:
-  postgres_data: {}
-  recipe_uploads: {}
