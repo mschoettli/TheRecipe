@@ -44,5 +44,5 @@ services:
       - "300"
 
 volumes:
-  postgres_data:
-  recipe_uploads:
+  postgres_data: {}
+  recipe_uploads: {}
