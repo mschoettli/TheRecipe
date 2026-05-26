@@ -1,18 +1,23 @@
 services:
   app:
+    image: ghcr.io/mschoettli/therecipe:latest
     build: .
+    restart: unless-stopped
     env_file:
       - .env
     ports:
       - "8000:8000"
     volumes:
       - recipe_uploads:/app/uploads
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       postgres:
         condition: service_healthy
 
   postgres:
     image: postgres:16-alpine
+    restart: unless-stopped
     env_file:
       - .env
     volumes:
@@ -22,6 +27,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  watchtower:
+    image: containrrr/watchtower:1.7.1
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - "--label-enable"
+      - "--cleanup"
+      - "--interval"
+      - "300"
 
 volumes:
   postgres_data:

@@ -20,6 +20,28 @@ docker compose up --build
 
 Open `http://localhost:8000`.
 
+## OMV Auto Updates
+
+The Compose file includes Watchtower. Watchtower checks every five minutes for a
+new `ghcr.io/mschoettli/therecipe:latest` image and updates only containers that
+have the Watchtower label enabled.
+
+Old app images are removed automatically after a successful update because
+Watchtower runs with `--cleanup`.
+
+For OMV, use:
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+After that, every push to `main` builds and publishes a new image through GitHub
+Actions. Watchtower pulls that image on the OMV host and restarts the app.
+
+PostgreSQL is not labeled for Watchtower updates. Database containers should be
+updated intentionally, not automatically.
+
 ## AI Import Configuration
 
 Set one provider in `.env`:
