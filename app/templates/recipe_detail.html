@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipe.title }} - TheRecipe{% endblock %}
+
+{% block content %}
+<article class="recipe-detail">
+  <section class="detail-hero">
+    <div class="detail-copy">
+      <div class="detail-meta">
+        {% if recipe.favorite %}<span>Favorite</span>{% endif %}
+        {% if recipe.is_draft %}<span>Draft</span>{% endif %}
+        {% if recipe.source_name %}<span>{{ recipe.source_name }}</span>{% endif %}
+      </div>
+      <h1>{{ recipe.title }}</h1>
+      {% if recipe.description %}
+        <p>{{ recipe.description }}</p>
+      {% endif %}
+      <div class="actions">
+        <a class="button button-primary" href="/recipes/{{ recipe.id }}/edit">Edit</a>
+        {% if recipe.source_url %}
+          <a class="button" href="{{ recipe.source_url }}" target="_blank" rel="noreferrer">Source</a>
+        {% endif %}
+        <form action="/recipes/{{ recipe.id }}/delete" method="post" data-confirm="Delete this recipe?">
+          <button class="button button-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% if recipe.image_url %}
+      <img class="detail-image" src="{{ recipe.image_url }}" alt="">
+    {% else %}
+      <div class="detail-image image-placeholder">{{ recipe.title[:1] }}</div>
+    {% endif %}
+  </section>
+
+  {% if recipe.import_warning %}
+    <div class="notice">{{ recipe.import_warning }}</div>
+  {% endif %}
+
+  <section class="fact-strip">
+    <div><span>Servings</span><strong>{{ recipe.servings or "Open" }}</strong></div>
+    <div><span>Prep</span><strong>{{ recipe.prep_time or "Open" }}</strong></div>
+    <div><span>Cook</span><strong>{{ recipe.cook_time or "Open" }}</strong></div>
+    <div><span>Total</span><strong>{{ recipe.total_time or "Open" }}</strong></div>
+    <div><span>Rating</span><strong>{{ recipe.rating }}/5</strong></div>
+  </section>
+
+  <section class="detail-layout">
+    <aside class="ingredients">
+      <h2>Ingredients</h2>
+      {% if recipe.ingredients %}
+        <ul>
+          {% for ingredient in recipe.ingredients %}
+            <li><label><input type="checkbox"> {{ ingredient.name }}</label></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No ingredients saved yet.</p>
+      {% endif %}
+      {% if recipe.tags %}
+        <div class="tag-row">
+          {% for tag in recipe.tags %}
+            <span>{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </aside>
+
+    <section class="steps">
+      <h2>Steps</h2>
+      {% if recipe.steps %}
+        <ol>
+          {% for step in recipe.steps %}
+            <li>{{ step.text }}</li>
+          {% endfor %}
+        </ol>
+      {% else %}
+        <p>No steps saved yet.</p>
+      {% endif %}
+
+      {% if recipe.notes %}
+        <section class="notes">
+          <h2>Notes</h2>
+          <p>{{ recipe.notes }}</p>
+        </section>
+      {% endif %}
+    </section>
+  </section>
+</article>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{% if recipe %}Edit{% else %}New{% endif %} Recipe - TheRecipe{% endblock %}
+
+{% block content %}
+<section class="form-head">
+  <div>
+    <h1>{% if recipe %}Edit recipe{% else %}New recipe{% endif %}</h1>
+    <p>{% if recipe and recipe.is_draft %}Review the imported draft before saving it to the library.{% else %}Store the full recipe, not only the source link.{% endif %}</p>
+  </div>
+</section>
+
+{% if recipe and recipe.import_warning %}
+  <div class="notice">{{ recipe.import_warning }}</div>
+{% endif %}
+
+<form class="recipe-form" action="{{ action }}" method="post">
+  <section class="form-grid">
+    <label>
+      Title
+      <input name="title" required value="{{ recipe.title if recipe else '' }}">
+    </label>
+    <label>
+      Image URL
+      <input name="image_url" value="{{ recipe.image_url if recipe else '' }}">
+    </label>
+    <label>
+      Source URL
+      <input name="source_url" value="{{ recipe.source_url if recipe else '' }}">
+    </label>
+    <label>
+      Source name
+      <input name="source_name" value="{{ recipe.source_name if recipe else '' }}">
+    </label>
+    <label>
+      Servings
+      <input name="servings" value="{{ recipe.servings if recipe else '' }}">
+    </label>
+    <label>
+      Prep time
+      <input name="prep_time" value="{{ recipe.prep_time if recipe else '' }}">
+    </label>
+    <label>
+      Cook time
+      <input name="cook_time" value="{{ recipe.cook_time if recipe else '' }}">
+    </label>
+    <label>
+      Total time
+      <input name="total_time" value="{{ recipe.total_time if recipe else '' }}">
+    </label>
+    <label>
+      Rating
+      <input name="rating" type="number" min="0" max="5" value="{{ recipe.rating if recipe else 0 }}">
+    </label>
+    <label class="checkbox-label">
+      <input name="favorite" type="checkbox" value="true" {% if recipe and recipe.favorite %}checked{% endif %}>
+      Favorite
+    </label>
+  </section>
+
+  <label>
+    Description
+    <textarea name="description" rows="3">{{ recipe.description if recipe else '' }}</textarea>
+  </label>
+  <label>
+    Ingredients
+    <textarea name="ingredients" rows="8" placeholder="One ingredient per line">{{ ingredients_text }}</textarea>
+  </label>
+  <label>
+    Steps
+    <textarea name="steps" rows="8" placeholder="One step per line">{{ steps_text }}</textarea>
+  </label>
+  <label>
+    Tags
+    <input name="tags" value="{{ tags_text }}" placeholder="quick, potatoes, vegetarian">
+  </label>
+  <label>
+    Notes
+    <textarea name="notes" rows="5">{{ recipe.notes if recipe else '' }}</textarea>
+  </label>
+
+  <div class="actions">
+    <button class="button button-primary" type="submit">Save recipe</button>
+    <a class="button" href="{% if recipe %}/recipes/{{ recipe.id }}{% else %}/{% endif %}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

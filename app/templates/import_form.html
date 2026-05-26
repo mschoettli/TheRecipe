@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Import Recipe - TheRecipe{% endblock %}
+
+{% block content %}
+<section class="import-panel">
+  <div>
+    <h1>Import recipe</h1>
+    <p>Paste a recipe URL. The app saves a draft so the result can be checked before it enters the library.</p>
+  </div>
+  {% if warning %}
+    <div class="notice">{{ warning }}</div>
+  {% endif %}
+  <form action="/imports/from-url" method="post" class="import-form">
+    <input name="url" type="url" required placeholder="https://example.com/recipe">
+    <button class="button button-primary" type="submit">Import</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Recipe Library - TheRecipe{% endblock %}
+
+{% block content %}
+<section class="library-head">
+  <div>
+    <h1>Recipe library</h1>
+    <p>Saved dishes, source links, notes, ingredients, and cooking steps in one searchable place.</p>
+  </div>
+  <form class="search" action="/" method="get">
+    <input name="q" value="{{ q }}" placeholder="Search potatoes, pasta, dessert..." aria-label="Search recipes">
+    <button class="button button-dark" type="submit">Search</button>
+  </form>
+</section>
+
+{% if recipes %}
+  <section class="recipe-grid" aria-label="Recipes">
+    {% for recipe in recipes %}
+      <article class="recipe-card">
+        <a href="/recipes/{{ recipe.id }}" class="card-image-link" aria-label="Open {{ recipe.title }}">
+          {% if recipe.image_url %}
+            <img src="{{ recipe.image_url }}" alt="">
+          {% else %}
+            <div class="image-placeholder">{{ recipe.title[:1] }}</div>
+          {% endif %}
+        </a>
+        <div class="card-body">
+          <div class="card-meta">
+            {% if recipe.favorite %}<span>Favorite</span>{% endif %}
+            {% if recipe.is_draft %}<span>Draft</span>{% endif %}
+            {% if recipe.total_time %}<span>{{ recipe.total_time }}</span>{% endif %}
+          </div>
+          <h2><a href="/recipes/{{ recipe.id }}">{{ recipe.title }}</a></h2>
+          {% if recipe.description %}
+            <p>{{ recipe.description }}</p>
+          {% endif %}
+          <div class="tag-row">
+            {% for tag in recipe.tags[:4] %}
+              <span>{{ tag.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
+{% else %}
+  <section class="empty-state">
+    <h2>No recipes found</h2>
+    <p>Create a recipe manually or import one from a URL.</p>
+    <div class="actions">
+      <a class="button button-primary" href="/recipes/new">New recipe</a>
+      <a class="button" href="/imports/new">Import URL</a>
+    </div>
+  </section>
+{% endif %}
+{% endblock %}

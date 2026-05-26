@@ -1,0 +1,1 @@
+"""TheRecipe application package."""
