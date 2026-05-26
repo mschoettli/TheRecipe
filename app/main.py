@@ -41,6 +41,20 @@ def startup() -> None:
     initialize_database()
 
 
+@app.get("/health")
+def health() -> dict[str, str]:
+    """
+    Return application health status.
+
+    Returns:
+    --------
+        dict[str, str]:
+            Health response.
+    """
+
+    return {"status": "ok"}
+
+
 @app.get("/", response_class=HTMLResponse)
 def list_recipes(
     request: Request,

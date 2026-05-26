@@ -15,7 +15,7 @@ TheRecipe is a simple Docker-based recipe library for saving structured recipes,
 
 ```bash
 cp .env.example .env
-docker compose up --build
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 ```
 
 Open `http://localhost:8000`.
@@ -35,6 +35,9 @@ For OMV, use:
 docker compose pull
 docker compose up -d
 ```
+
+The OMV stack uses the published image from GitHub Container Registry. The local
+development override file is only needed when building on your workstation.
 
 After that, every push to `main` builds and publishes a new image through GitHub
 Actions. Watchtower pulls that image on the OMV host and restarts the app.

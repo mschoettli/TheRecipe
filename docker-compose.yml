@@ -1,7 +1,6 @@
 services:
   app:
     image: ghcr.io/mschoettli/therecipe:latest
-    build: .
     restart: unless-stopped
     env_file:
       - .env
@@ -11,6 +10,11 @@ services:
       - recipe_uploads:/app/uploads
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
     depends_on:
       postgres:
         condition: service_healthy
